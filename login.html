@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./css/cadastro.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Nome de Usuário"
+          required
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Senha"
+          required
+        />
+        <button type="submit" class="button">Login</button>
+      </form>
+      <div class="info">
+        <p>
+          <strong>Nota:</strong> Insira seu nome de usuário e senha para acessar
+          sua conta.
+        </p>
+      </div>
+    </div>
+
+    <script src="./js/AjaxRequest.js"></script>
+    <script src="./js/login.js"></script>
+  </body>
+</html>

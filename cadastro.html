@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="./css/cadastro.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Cadastro</h1>
+      <form id="cadastroForm">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Nome de Usuário"
+          required
+        />
+        <span id="usernameFeedback" class="error"></span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Senha"
+          required
+        />
+        <button type="submit" class="button">Cadastrar</button>
+      </form>
+      <div class="info">
+        <p>
+          <strong>Nota:</strong> O nome de usuário é único e será usado na URL
+          para acessar os diretórios do GitHub.
+        </p>
+      </div>
+    </div>
+
+    <script src="./js/AjaxRequest.js"></script>
+    <script src="./js/cadastro.js"></script>
+  </body>
+</html>
