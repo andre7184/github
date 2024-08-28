@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="./css/home.css" />
+  </head>
+  <body>
+    <header>
+      <div class="menu-toggle">
+        <input type="checkbox" id="menu-check" />
+        <div class="menu-btn">
+          <label for="menu-check">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+        </div>
+        <nav class="menu">
+          <a href="#">Meu GitHub</a>
+          <a href="#">Repositórios Clonados</a>
+          <a href="#">Clonar Repositório</a>
+          <a href="#">Meus Dados</a>
+          <a href="#">Logout</a>
+        </nav>
+      </div>
+      <nav class="desktop-menu">
+        <a href="#">Meu GitHub</a>
+        <a href="#">Repositórios Clonados</a>
+        <a href="#">Clonar Repositório</a>
+        <a href="#">Meus Dados</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Bem-vindo ao Meu Serviço</h1>
+      <p>
+        Aqui você pode gerenciar seus repositórios do GitHub diretamente do
+        nosso serviço. Utilize o menu para navegar entre as opções disponíveis:
+      </p>
+      <ul>
+        <li>
+          <strong>Meu GitHub:</strong> Acesse suas informações e repositórios do
+          GitHub.
+        </li>
+        <li>
+          <strong>Repositórios Clonados:</strong> Veja a lista de repositórios
+          que você clonou.
+        </li>
+        <li>
+          <strong>Clonar Repositório:</strong> Clone um novo repositório do
+          GitHub para o nosso servidor.
+        </li>
+        <li>
+          <strong>Meus Dados:</strong> Gerencie suas informações pessoais.
+        </li>
+        <li><strong>Logout:</strong> Saia da sua conta.</li>
+      </ul>
+      <p>
+        Para clonar um repositório, vá para "Clonar Repositório", insira a URL
+        do repositório do GitHub e siga as instruções. Após clonar, você poderá
+        acessar o conteúdo através de uma URL personalizada.
+      </p>
+    </main>
+    <script src="AjaxRequest.js"></script>
+    <script src="home.js"></script>
+  </body>
+</html>
