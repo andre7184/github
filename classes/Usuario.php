@@ -13,6 +13,11 @@ class Usuario {
         return count($usuarios) > 0;
     }
 
+    public function userCadastrado($user){
+        $usuarios = $this->crud->read('usuario', ['user' => $user]);
+        return count($usuarios) > 0;
+    }
+
     public function verificaLogin($email, $senha){
         $usuarios = $this->crud->read('usuario', ['email' => $email]);
         if (count($usuarios) > 0) {
