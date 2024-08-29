@@ -19,7 +19,7 @@ document
         if (data.success) {
           alert("Login realizado com sucesso!");
           // Redirecionar para a página do usuário
-          window.location.href = `meusite.com/${username}`;
+          window.location.href = "home.html";
         } else {
           alert("Nome de usuário ou senha incorretos.");
         }

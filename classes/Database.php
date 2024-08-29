@@ -1,11 +1,18 @@
 <?php
+include '../../../private/config_gh.php';
 class Database {
-    private $host = "localhost";
-    private $db_name = "admin_github";
-    private $username = "admin_github";
-    private $password = "Amb@142536";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     public $conn;
-
+    public function __construct() {
+        global $host, $db_name, $username, $password;
+        $this->host = $host; // coloque seu host aqui
+        $this->db_name = $db_name; // coloque nome do banco de dados aqui
+        $this->username = $username; // coloque o usuario do banco de dados aqui
+        $this->password = $password; // coloque a senha do banco de dados aqui
+    }
     public function dbConnection() {
         $this->conn = null;    
         try {

@@ -55,3 +55,25 @@ document
         alert("Ocorreu um erro ao realizar o cadastro.");
       });
   });
+document.getElementById("user_gh").addEventListener("input", function () {
+  const username = this.value;
+  const imgGithub = document.getElementById("imgGithub");
+
+  if (username) {
+    fetch(`https://api.github.com/users/${username}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.avatar_url) {
+          imgGithub.innerHTML = `<img src="${data.avatar_url}" alt="Avatar do GitHub" width="50" height="50">`;
+        } else {
+          imgGithub.innerHTML = "Usuário não encontrado";
+        }
+      })
+      .catch((error) => {
+        imgGithub.innerHTML = "Erro ao buscar usuário";
+        console.error("Erro:", error);
+      });
+  } else {
+    imgGithub.innerHTML = "";
+  }
+});
