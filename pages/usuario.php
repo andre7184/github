@@ -33,21 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dados['message'] = 'E-mail não cadastrado.';
         }
     } else if ($acao === 'cadastrar_usuario') {
-        $name = $usuario->sanitize($_POST['nome']);
+        $user = $usuario->sanitize($_POST['user']);
         $email = $usuario->sanitize($_POST['email']);
         $senha = $usuario->sanitize($_POST['senha']);
-        // verificar se o usuario logado é admin
-        if ($autenticacao->estaLogado() && $autenticacao->eAdmin()) {
-            $tipo_admin = true;
-        } else {
-            $tipo_admin = false;
-        }
         if ($usuario->emailCadastrado($email)) {
             $dados['status'] = 'error';
             $dados['message'] = 'Email já está registrado.';
         } else {
             // Registre o novo usuário
-            if ($usuario->cadastraUsuario($name, $email, $senha, $tipo_admin)) {
+            if ($usuario->cadastraUsuario($user, $email, $senha)) {
                 $dados['status'] = 'success';
                 $dados['message'] = 'Registro bem-sucedido.';
             } else {
@@ -55,28 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dados['message'] = 'Falha no registro.';
             }
         }
-    } else if ($acao === 'verifica_nomeusuario') {
-        $name = $usuario->sanitize($_POST['nome']);
-        $email = $usuario->sanitize($_POST['email']);
-        $senha = $usuario->sanitize($_POST['senha']);
+    } else if ($acao === 'verifica_user') {
+        $user = $usuario->sanitize($_POST['user']);
         // verificar se o usuario logado é admin
-        if ($autenticacao->estaLogado() && $autenticacao->eAdmin()) {
-            $tipo_admin = true;
-        } else {
-            $tipo_admin = false;
-        }
-        if ($usuario->emailCadastrado($email)) {
+        if ($usuario->userCadastrado($user)) {
             $dados['status'] = 'error';
-            $dados['message'] = 'Email já está registrado.';
+            $dados['message'] = 'User já está registrado.';
         } else {
-            // Registre o novo usuário
-            if ($usuario->cadastraUsuario($name, $email, $senha, $tipo_admin)) {
-                $dados['status'] = 'success';
-                $dados['message'] = 'Registro bem-sucedido.';
-            } else {
-                $dados['status'] = 'error';
-                $dados['message'] = 'Falha no registro.';
-            }
+            $dados['status'] = 'success';
+            $dados['message'] = 'User disponível.';
         }
     } else { 
         if ($autenticacao->estaLogado()){

@@ -29,21 +29,12 @@ class Usuario {
         return false;
     }
 
-    public function Admin($email){
-        $usuarios = $this->crud->read('usuario', ['email' => $email]);
-        if (count($usuarios) > 0) {
-            return $usuarios[0]['admin'] == 1;
-        }
-        return false;
-    }
-
-    public function cadastraUsuario($nome, $email, $senha, $admin){
+    public function cadastraUsuario($user, $email, $senha){
         $senha = password_hash($senha, PASSWORD_DEFAULT);
         return $this->crud->create('usuario', [
-            'nome' => $nome,
+            'user' => $user,
             'email' => $email,
-            'senha' => $senha,
-            'admin' => $admin
+            'senha' => $senha
         ]);
     }
 
@@ -77,7 +68,7 @@ class Usuario {
     public function getNome($email){
         $usuarios = $this->crud->read('usuario', ['email' => $email]);
         if (count($usuarios) > 0) {
-            return $usuarios[0]['nome'];
+            return $usuarios[0]['user'];
         }
         return '';
     }

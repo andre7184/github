@@ -10,14 +10,16 @@ document.getElementById("username").addEventListener("input", function () {
 
   const ajax = new AjaxRequest("usuario.php");
   ajax
-    .send({ username: username, acao: "verifica_nomeusuario" })
+    .send({ user: username, acao: "verifica_user" })
     .then((data) => {
-      if (data.exists) {
-        feedback.textContent = "Nome de usuário já está em uso.";
-        feedback.className = "error";
-      } else {
-        feedback.textContent = "Nome de usuário disponível.";
-        feedback.className = "success";
+      if (data.status) {
+        if (data.status == "error") {
+          feedback.textContent = "Nome de usuário já está em uso.";
+          feedback.className = "error";
+        } else {
+          feedback.textContent = "Nome de usuário disponível.";
+          feedback.className = "success";
+        }
       }
     })
     .catch((error) => {
@@ -32,14 +34,14 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("user_gh").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     const data = {
-      username: username,
+      user: username,
       email: email,
-      password: password,
+      senha: password,
       acao: "cadastrar_usuario",
     };
 
