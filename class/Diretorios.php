@@ -1,6 +1,6 @@
 <?php
 require_once 'Crud.php';
-require_once 'vendor/autoload.php'; // Certifique-se de que o autoload do Composer está incluído
+require_once '../../vendor/autoload.php'; // Certifique-se de que o autoload do Composer está incluído
 
 use CzProject\GitPhp\Git;
 
