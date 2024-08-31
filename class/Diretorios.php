@@ -30,9 +30,9 @@ class Diretorios {
         return null;
     }
 
-    public function clonarRepositorio($user, $id_usuario, $repositorio) {
+    public function clonarRepositorio($user, $id_usuario, $repositorio, $linguagem) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
-        $userDir = $baseDir . $user . '/' . $repositorio;
+        $userDir = $baseDir . $user;
     
         if (!is_dir($baseDir)) {
             return ['success' => false, 'msg' => 'Diretório base não encontrado.'];
@@ -45,6 +45,7 @@ class Diretorios {
         }
     
         $repoUrl = "https://github.com/$user/$repositorio.git";
+        
         if (is_dir($userDir .'/'. $repositorio . '/.git')) {
             // Diretório já contém um repositório Git, fazer pull
             $command = "cd " . escapeshellarg($userDir) . " && git pull";
@@ -61,7 +62,7 @@ class Diretorios {
         $data = [
             'nome' => $repositorio,
             'id_usuario' => $id_usuario,
-            'data_atualizado' => date('Y-m-d H:i:s')
+            'linguagem' => $linguagem
         ];
         $status =$this->crud->create('diretorio', $data);
         if($status){

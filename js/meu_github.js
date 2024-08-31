@@ -52,7 +52,7 @@ function carregarRepositorios(dados) {
             ${
               diretorio
                 ? `<button class="button-ver-diretorio" onclick="abrirDiretorio(${diretorio.id})">Ver Diretório</button>`
-                : `<button class="button-clonar-repositorio" onclick="clonarRepositorio('${repo.name}')">Clonar Repositório</button>`
+                : `<button class="button-clonar-repositorio" onclick="clonarRepositorio('${repo.language}','${repo.name}')">Clonar Repositório</button>`
             }
           </div>
         `;
@@ -62,13 +62,18 @@ function carregarRepositorios(dados) {
     .catch((error) => console.error("Erro:", error));
 }
 
-function clonarRepositorio(repoName) {
-  const data = { acao: "clonar_repositorio", repositorio: repoName };
+function clonarRepositorio(repoNome, repoLinguagem) {
+  const data = {
+    acao: "clonar_repositorio",
+    repositorio: repoNome,
+    linguagem: repoLinguagem,
+  };
   const ajaxRequest = new AjaxRequest("pages/remote.php");
   ajaxRequest
     .send(data)
     .then((response) => {
       console.log("Resposta do servidor:", response);
+      verificarAutenticacao();
     })
     .catch((error) => {
       console.error("Erro ao clonar repositório:", error);
