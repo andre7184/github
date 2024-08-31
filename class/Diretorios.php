@@ -30,10 +30,10 @@ class Diretorios {
         return null;
     }
     
-    public function clonarRepositorio($user, $id_usuario, $repositorio) {
+    public function clonarRepositorio($user, $id_usuario, $nome_diretorio) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
-        $repoDir = $userDir . '/' . $repositorio;
+        $repoDir = $userDir . '/' . $nome_diretorio;
     
         if (!is_dir($baseDir)) {
             return ['success' => false, 'msg' => 'Diretório base não encontrado.'];
@@ -45,7 +45,7 @@ class Diretorios {
             }
         }
     
-        $repoUrl = "https://github.com/$user/$repositorio.git";
+        $repoUrl = "https://github.com/$user/$nome_diretorio.git";
     
         if (is_dir($repoDir . '/.git')) {
             // Diretório já contém um repositório Git, fazer pull
@@ -62,8 +62,9 @@ class Diretorios {
         }
     
         // Contar arquivos e pastas
-        $fileCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -type f | wc -l");
-        $dirCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -type d | wc -l");
+        // Contar arquivos e pastas corretamente
+        $fileCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -maxdepth 1 -type f | wc -l");
+        $dirCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -maxdepth 1 -type d | wc -l");
     
         // Obter data da última atualização remota
         $lastUpdate = $this->runCommand("cd " . escapeshellarg($repoDir) . " && git log -1 --format=%cd");
@@ -84,13 +85,10 @@ class Diretorios {
             }
         }
     
-        // Detectar a linguagem principal usando Linguist
-        $linguagem = $this->runCommand("cd " . escapeshellarg($repoDir) . " && github-linguist");
-
         $data = [
-            'nome' => $repositorio,
+            'nome' => $nome_diretorio,
             'id_usuario' => $id_usuario,
-            'linguagem' => trim($linguagem['output']),
+            'linguagem' => $this->obterLinguagemDoGitHub($user, $nome_diretorio),
             'qtd_arquivos' => trim($fileCount['output']),
             'qtd_pastas' => trim($dirCount['output']),
             'data_atualizado_remoto' => $formattedLastUpdate,
@@ -158,8 +156,8 @@ class Diretorios {
                 }
     
                 // Contar arquivos e pastas
-                $fileCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -type f | wc -l");
-                $dirCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -type d | wc -l");
+                $fileCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -maxdepth 1 -type f | wc -l");
+                $dirCount = $this->runCommand("find " . escapeshellarg($repoDir) . " -maxdepth 1 -type d | wc -l");
     
                 // Obter data da última atualização remota
                 $lastUpdate = $this->runCommand("cd " . escapeshellarg($repoDir) . " && git log -1 --format=%cd");
@@ -185,7 +183,7 @@ class Diretorios {
     
                 // Atualiza os dados do repositório no banco de dados
                 $data = [
-                    'linguagem' => trim($linguagem['output']),
+                    'linguagem' => $this->obterLinguagemDoGitHub($user, $nome_diretorio),
                     'qtd_arquivos' => trim($fileCount['output']),
                     'qtd_pastas' => trim($dirCount['output']),
                     'data_atualizado_remoto' => $formattedLastUpdate,
@@ -227,6 +225,20 @@ class Diretorios {
         }
 
         return rmdir($dir);
+    }
+
+    private function obterLinguagemDoGitHub($user, $repositorio) {
+        $url = "https://api.github.com/repos/$user/$repositorio";
+        $options = [
+            'http' => [
+                'header' => "User-Agent: PHP\r\n"
+            ]
+        ];
+        $context = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+        $data = json_decode($response, true);
+    
+        return $data['language'] ?? 'Desconhecida';
     }
 }
 ?>
