@@ -12,9 +12,14 @@ class Diretorios {
     }
 
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
-        $baseDir = '../../gh/';
-        $userDir = $baseDir . $user;
-    
+        $baseDir = '../../gh';
+        $userDir = $baseDir .'/'. $user;
+        
+        if (!is_dir($baseDir)) {
+            echo 'Erro: Diretório base não encontrado.';
+            exit;
+        }
+        
         // Verifica se estamos no diretório correto
         if (!is_dir($baseDir)) {
             echo 'Erro: Diretório base não encontrado.';
@@ -23,7 +28,10 @@ class Diretorios {
     
         // Cria o diretório do usuário se não existir
         if (!file_exists($userDir)) {
-            mkdir($userDir, 0777, true);
+            if (!mkdir($userDir, 0777, true)) {
+                echo 'Erro: Não foi possível criar o diretório do usuário.';
+                exit;
+            }
             echo 'Diretório do usuário criado.';
         } else {
             echo 'Usuário já existe.';
