@@ -28,8 +28,8 @@ function carregarDiretorios() {
         data.repositorios.forEach((diretorio) => {
           const card = document.createElement("div");
           card.className = "diretorio-card";
-
-          const iconeLinguagem = `imgs/${diretorio.linguagem}.png`;
+          const linguagem = diretorio.linguagem.toLowerCase();
+          const iconeLinguagem = `imgs/${linguagem}.png`;
 
           card.innerHTML = `
               <h2>${diretorio.nome}</h2>
