@@ -118,12 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else if ($acao === 'clonar_repositorio') {
                 $nome_diretorio = $usuario->sanitize($_POST['repositorio']);
                 $resultado = $diretorios->clonarRepositorio($user, $id_usuario, $nome_diretorio);
-                if ($resultado) {
+                if ($resultado['status']) {
                     $dados['status'] = 'success';
                     $dados['message'] = 'Repositório clonado com sucesso!';
                 } else {
                     $dados['status'] = 'error';
-                    $dados['message'] = 'Erro ao clonar repositório.';
+                    $dados['message'] = $resultado['msg'];
                 }
             } else if ($acao === 'listar_repositorios') {
                 $repositorios = $diretorios->listarRepositorios($id_usuario);
