@@ -12,29 +12,19 @@ class Diretorios {
     }
 
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
-        $baseDir = '../../gh';
-        $userDir = $baseDir .'/'. $user;
-        
-        if (!is_dir($baseDir)) {
-            echo 'Erro: Diretório base não encontrado.';
-            exit;
-        }
-        
+        $baseDir = '../../gh/';
+        $userDir = $baseDir . $user; 
+    
         // Verifica se estamos no diretório correto
         if (!is_dir($baseDir)) {
-            echo 'Erro: Diretório base não encontrado.';
-            exit;
+            return false;
         }
     
         // Cria o diretório do usuário se não existir
         if (!file_exists($userDir)) {
             if (!mkdir($userDir, 0777, true)) {
-                echo 'Erro: Não foi possível criar o diretório do usuário.';
-                exit;
+                return false;
             }
-            echo 'Diretório do usuário criado.';
-        } else {
-            echo 'Usuário já existe.';
         }
     
         $repoUrl = "https://github.com/$user/$repositorio.git";
