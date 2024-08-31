@@ -38,8 +38,8 @@ function carregarDiretorios() {
               <p>Linguagem: <img src="${iconeLinguagem}" alt="${diretorio.linguagem}" style="width: 20px; height: 20px;"> ${diretorio.linguagem}</p>
               <a href="${diretorio.url}" target="_blank">Acessar Diretório</a>
               <div class="buttons">
-                <button class="button" onclick="atualizarDiretorio('${diretorio.id}','${diretorio.nome}')">Atualizar</button>
-                <button class="button button-remover" onclick="removerDiretorio('${diretorio.id}','${diretorio.nome}')">Remover</button>
+                <button class="button" onclick="atualizarDiretorio('${diretorio.id}')">Atualizar</button>
+                <button class="button button-remover" onclick="removerDiretorio('${diretorio.id}')">Remover</button>
               </div>
             `;
 
@@ -52,11 +52,10 @@ function carregarDiretorios() {
     });
 }
 
-function atualizarDiretorio(id, nome) {
+function atualizarDiretorio(id) {
   const data = {
     acao: "atualizar_repositorio",
     id_diretorio: id,
-    nome_diretorio: nome,
   };
   const ajaxRequest = new AjaxRequest("pages/remote.php");
 
@@ -71,11 +70,10 @@ function atualizarDiretorio(id, nome) {
     });
 }
 
-function removerDiretorio(id, nome) {
+function removerDiretorio(id) {
   const data = {
     acao: "remover_repositorio",
     id_diretorio: id,
-    nome_diretorio: nome,
   };
   const ajaxRequest = new AjaxRequest("pages/remote.php");
 

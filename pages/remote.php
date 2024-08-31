@@ -120,8 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } else if ($acao === 'clonar_repositorio') {
                 $nome_diretorio = $usuario->sanitize($_POST['repositorio']);
-                $linguagem = $usuario->sanitize($_POST['linguagem']);
-                $resultado = $diretorios->clonarRepositorio($user, $id_usuario, $nome_diretorio, $linguagem);
+                $resultado = $diretorios->clonarRepositorio($user, $id_usuario, $nome_diretorio);
                 if ($resultado['success']) {
                     $dados['status'] = 'success';
                     $dados['message'] = 'Repositório clonado com sucesso!';
