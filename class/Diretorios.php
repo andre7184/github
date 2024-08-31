@@ -32,7 +32,7 @@ class Diretorios {
 
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
-        $userDir = $baseDir . $user;
+        $userDir = $baseDir . $user . '/' . $repositorio;
     
         if (!is_dir($baseDir)) {
             return ['success' => false, 'msg' => 'Diretório base não encontrado.'];

@@ -38,8 +38,8 @@ function carregarDiretorios() {
               <p>Linguagem: <img src="${iconeLinguagem}" alt="${diretorio.linguagem}" style="width: 20px; height: 20px;"> ${diretorio.linguagem}</p>
               <a href="${diretorio.url}" target="_blank">Acessar Diretório</a>
               <div class="buttons">
-                <button class="button" onclick="atualizarDiretorio(${diretorio.id},${diretorio.nome})">Atualizar</button>
-                <button class="button button-remover" onclick="removerDiretorio(${diretorio.id},${diretorio.nome})">Remover</button>
+                <button class="button" onclick="atualizarDiretorio('${diretorio.id}','${diretorio.nome}')">Atualizar</button>
+                <button class="button button-remover" onclick="removerDiretorio('${diretorio.id}','${diretorio.nome}')">Remover</button>
               </div>
             `;
 
