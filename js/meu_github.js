@@ -64,7 +64,7 @@ function carregarRepositorios(dados) {
 
 function clonarRepositorio(repoName) {
   const data = { acao: "clonar_repositorio", repositorio: repoName };
-  const ajaxRequest = new AjaxRequest("remote.php");
+  const ajaxRequest = new AjaxRequest("pages/remote.php");
   ajaxRequest
     .send(data)
     .then((response) => {
