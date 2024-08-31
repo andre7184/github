@@ -33,15 +33,14 @@ class Diretorios {
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
-
+    
         if (!is_dir($baseDir)) {
             return array(
                 'status' => false,
                 'msg' => 'Diretório base não encontrado.'
             );
         }
-
-        // Cria o diretório do usuário se não existir
+    
         if (!file_exists($userDir)) {
             if (!mkdir($userDir, 0777, true)) {
                 return array(
@@ -50,24 +49,41 @@ class Diretorios {
                 );
             }
         }
-
+    
         $repoUrl = "https://github.com/$user/$repositorio.git";
-        $command = "git clone $repoUrl " . escapeshellarg($userDir);
+        if (is_dir($userDir .'/'. $repositorio . '/.git')) {
+            // Diretório já contém um repositório Git, fazer pull
+            $command = "cd " . escapeshellarg($userDir) . " && git pull";
+        } else {
+            // Diretório não contém um repositório Git, clonar
+            $command = "git clone $repoUrl " . escapeshellarg($userDir);
+        }
         $result = $this->runCommand($command);
-
+    
         if ($result === null || $result['return_code'] !== 0) {
             return array(
                 'status' => false,
-                'msg' => 'Erro ao clonar o repositório: ' . $result['error']
+                'msg' => 'Erro ao clonar/atualizar o repositório: ' . $result['error']
             );
         }
-
+    
         $data = [
             'nome' => $repositorio,
             'id_usuario' => $id_usuario,
             'data_atualizado' => date('Y-m-d H:i:s')
         ];
-        return $this->crud->create('diretorio', $data);
+        $status =$this->crud->create('diretorio', $data);
+        if($status){
+            return array(
+                'status' => true,
+                'msg' => 'Repositório clonado/atualizado com sucesso.'
+            );
+        }else{
+            return array(
+                'status' => false,
+                'msg' => 'Erro ao clonar/atualizar o repositório.'
+            );
+        }
     }
 
     public function listarRepositorios($id_usuario) {
