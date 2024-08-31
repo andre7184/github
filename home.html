@@ -14,29 +14,119 @@
         Aqui você pode gerenciar seus repositórios do GitHub diretamente do
         nosso serviço. Utilize o menu para navegar entre as opções disponíveis:
       </p>
+      <p>
+        <strong>ATENCAO:</strong> Para clonar um repositório do GitHub para o
+        nosso servidor ele tem que está publico!
+      </p>
       <ul>
         <li>
           <strong>Meu GitHub:</strong> Acesse suas informações e repositórios do
           GitHub.
+          <ol>
+            <li>
+              <strong>Botao Clonar Repositório:</strong> Clone um novo
+              repositório do GitHub para o nosso servidor.
+            </li>
+            <li>
+              <strong>Botao Ver Diretório:</strong> Acesse seu diretório já
+              clonado.
+            </li>
+          </ol>
         </li>
         <li>
           <strong>Repositórios Clonados:</strong> Veja a lista de repositórios
-          que você clonou.
-        </li>
-        <li>
-          <strong>Clonar Repositório:</strong> Clone um novo repositório do
-          GitHub para o nosso servidor.
+          que você clonou mostrados como Diretórios.
+          <ol>
+            <li>
+              <strong>Botao Atualizar:</strong> Atualize um Repositório clonado
+              (Busca as mudanças da branch main do repositório remoto origin e
+              as integra na branch atual do repositório local).
+            </li>
+            <li>
+              <strong>Botao Remover:</strong> Remove um Repositorio
+              clonado.(caso seu repositorio do github trocou de nome ou nao
+              existe mais, voce deve remover esse diretorio para criar outro com
+              o nome correto) clonado.
+            </li>
+            <li>
+              <strong>Link Acessar Diretório:</strong> Acesse o diretório
+              clonado.(para isso seu drepositorio deve possuir arquivo index ou
+              home, html ou php)
+            </li>
+          </ol>
         </li>
         <li>
           <strong>Meus Dados:</strong> Gerencie suas informações pessoais.
         </li>
         <li><strong>Logout:</strong> Saia da sua conta.</li>
       </ul>
-      <p>
-        Para clonar um repositório, vá para "Clonar Repositório", insira a URL
-        do repositório do GitHub e siga as instruções. Após clonar, você poderá
-        acessar o conteúdo através de uma URL personalizada.
-      </p>
+      <h2>COMO TORNAR UM REPOSITÓRIO PUBLICO</h2>
+      <ul>
+        <li>
+          <strong>Acesse o GitHub:</strong>
+          <ul>
+            <li>
+              Vá para <a href="https://github.com">github.com</a> e faça login
+              na sua conta.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Navegue até o Repositório:</strong>
+          <ul>
+            <li>
+              No canto superior direito, clique no ícone do seu perfil e
+              selecione "Your repositories" (Seus repositórios).
+            </li>
+            <li>Clique no repositório que você deseja tornar público.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Acesse as Configurações do Repositório:</strong>
+          <ul>
+            <li>
+              No menu do repositório, clique em "Settings" (Configurações).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Mude a Visibilidade do Repositório:</strong>
+          <ul>
+            <li>
+              Role a página para baixo até encontrar a seção "Danger Zone" (Zona
+              de Perigo).
+            </li>
+            <li>
+              Clique em "Change repository visibility" (Alterar visibilidade do
+              repositório).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Confirme a Alteração:</strong>
+          <ul>
+            <li>
+              Uma janela pop-up aparecerá. Selecione "Make public" (Tornar
+              público).
+            </li>
+            <li>Digite o nome do repositório para confirmar a alteração.</li>
+            <li>
+              Clique em "I understand, change repository visibility" (Eu
+              entendo, alterar visibilidade do repositório).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Verificação de Segurança:</strong>
+          <ul>
+            <li>
+              Dependendo das suas configurações de segurança, você pode precisar
+              inserir sua senha ou passar por uma verificação de segurança
+              adicional.
+            </li>
+          </ul>
+        </li>
+      </ul>
     </main>
     <script>
       fetch("pages/header.html")
