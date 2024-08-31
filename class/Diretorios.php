@@ -13,14 +13,12 @@ class Diretorios {
         $userDir = $baseDir . $user;
 
         // Verifica se estamos no diretório correto
-        exec('ls ' . escapeshellarg($baseDir), $output, $returnVar);
-
-        // Exibe o resultado do comando
-        if ($returnVar === 0) {
+        if (is_dir($baseDir)) {
+            $output = scandir($baseDir);
             echo 'Conteúdo do diretório base (' . $baseDir . '):<br>';
             echo '<pre>' . implode("\n", $output) . '</pre>';
         } else {
-            echo 'Erro ao listar o diretório base.';
+            echo 'Erro: Diretório base não encontrado.';
         }
         exit;
         
