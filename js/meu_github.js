@@ -74,3 +74,8 @@ function clonarRepositorio(repoName) {
       console.error("Erro ao clonar repositório:", error);
     });
 }
+
+function abrirDiretorio(id) {
+  localStorage.setItem("id_diretorio", id);
+  window.location.href = "diretorios.html";
+}

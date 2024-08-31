@@ -1,0 +1,59 @@
+#diretorios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.diretorio-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.diretorio-card h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  color: #333;
+}
+
+.diretorio-card p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.diretorio-card a {
+  color: #3141ff;
+  text-decoration: none;
+}
+
+.diretorio-card a:hover {
+  text-decoration: underline;
+}
+
+.diretorio-card .buttons {
+  margin-top: 10px;
+}
+
+.diretorio-card .button {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.diretorio-card .button:hover {
+  background-color: #555;
+}
+
+.button-remover {
+  background-color: #ff3141;
+}
+
+.button-remover:hover {
+  background-color: #ff5555;
+}

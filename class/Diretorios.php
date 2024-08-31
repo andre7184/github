@@ -35,18 +35,12 @@ class Diretorios {
         $userDir = $baseDir . $user;
     
         if (!is_dir($baseDir)) {
-            return array(
-                'status' => false,
-                'msg' => 'Diretório base não encontrado.'
-            );
+            return ['success' => false, 'msg' => 'Diretório base não encontrado.'];
         }
     
         if (!file_exists($userDir)) {
             if (!mkdir($userDir, 0777, true)) {
-                return array(
-                    'status' => false,
-                    'msg' => 'Não foi possível criar o diretório do usuário.'
-                );
+                return ['success' => false, 'msg' => 'Não foi possível criar o diretório do usuário.'];
             }
         }
     
@@ -61,10 +55,7 @@ class Diretorios {
         $result = $this->runCommand($command);
     
         if ($result === null || $result['return_code'] !== 0) {
-            return array(
-                'status' => false,
-                'msg' => 'Erro ao clonar/atualizar o repositório: ' . $result['error']
-            );
+            return ['success' => false, 'msg' => 'Erro ao clonar/atualizar o repositório: ' . $result['error']];
         }
     
         $data = [
@@ -74,15 +65,9 @@ class Diretorios {
         ];
         $status =$this->crud->create('diretorio', $data);
         if($status){
-            return array(
-                'status' => true,
-                'msg' => 'Repositório clonado/atualizado com sucesso.'
-            );
+            return ['success' => true, 'msg' => 'tabela diretorio criada com sucesso.'];
         }else{
-            return array(
-                'status' => false,
-                'msg' => 'Erro ao clonar/atualizar o repositório.'
-            );
+            return ['success' => false, 'msg' => 'Erro ao criar tabela diretório.'];
         }
     }
 
@@ -102,38 +87,57 @@ class Diretorios {
         }
     }
 
-    public function removerRepositorio($id_repositorio) {
-        $repositorio = $this->crud->read('diretorio', ['id' => $id_repositorio]);
-        if ($repositorio) {
-            $user = $repositorio[0]['id_usuario'];
-            $nome = $repositorio[0]['nome'];
+    public function removerRepositorio($user,$id_diretorio) {
+        $diretorio = $this->crud->read('diretorio', ['id' => $id_diretorio]);
+        if ($diretorio) {
+            $nome = $diretorio[0]['nome'];
             $repoDir = realpath(__DIR__ . '/../../gh/') . "/".$user.'/'.$nome;
 
             // Remove o diretório do repositório
             $this->deleteDirectory($repoDir);
 
             // Remove do banco de dados
-            return $this->crud->delete('diretorio', ['id' => $id_repositorio]);
+            $status = $this->crud->delete('diretorio', ['id' => $id_diretorio]);
+            if($status){
+                return ['success' => true, 'msg' => 'tabela diretorio removida com sucesso.'];
+            }else{
+                return ['success' => false, 'msg' => 'Erro ao remover a tabela diretorio.'];
+            }
         } else {
-            return false;
+            return ['success' => false, 'msg' => 'Diretório não encontrado.'];
         }
     }
 
-    public function atualizarRepositorio($user, $repositorio) {
-        $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
-        $repoDir = $baseDir . $user .'/'. $repositorio;
+    public function atualizarRepositorio($user,$id_diretorio) {
+        $diretorio = $this->crud->read('diretorio', ['id' => $id_diretorio]);
+        if ($diretorio) {
+            $nome_diretorio = $diretorio[0]['nome'];
+            $linguagem = $diretorio[0]['linguagem'];
+            $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
+            $repoDir = $baseDir . $user .'/'. $nome_diretorio;
 
-        if (is_dir($repoDir)) {
-            $command = "cd " . escapeshellarg($repoDir) . " && git pull";
-            $result = $this->runCommand($command);
+            if (is_dir($repoDir)) {
+                $command = "cd " . escapeshellarg($repoDir) . " && git pull";
+                $result = $this->runCommand($command);
 
-            if ($result === null || $result['return_code'] !== 0) {
-                return ['status' => 'error', 'message' => 'Erro ao atualizar repositório: ' . $result['error']];
+                if ($result === null || $result['return_code'] !== 0) {
+                    return ['success' => false, 'msg' => 'Erro ao atualizar repositório: ' . $result['error']];
+                }
+                // Atualiza os dados do repositório no banco de dados
+                $data = [
+                    'linguagem' => $linguagem
+                ];
+                $status = $this->crud->update('diretorio', $data, ['id' => $id_diretorio]);
+                if($status){
+                    return ['success' => true, 'msg' => 'Repositório atualizado com sucesso.'];
+                }else{
+                    return ['success' => false, 'msg' => 'Erro ao atualizar repositório.'];
+                }
+            } else {
+                return ['success' => false, 'msg' => 'Repositório não encontrado.'];
             }
-
-            return ['status' => 'success', 'message' => 'Repositório atualizado com sucesso.'];
         } else {
-            return ['status' => 'error', 'message' => 'Repositório não encontrado.'];
+            return ['success' => false, 'msg' => 'Repositório não encontrado.'];
         }
     }
 

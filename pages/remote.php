@@ -3,6 +3,9 @@ require_once '../config/config.php';
 require_once '../class/Usuario.php';
 require_once '../class/Autenticacao.php';
 
+date_default_timezone_set('America/Sao_Paulo');
+setlocale(LC_TIME, 'pt_BR.UTF-8');
+
 $usuario = new Usuario();
 $autenticacao = new Autenticacao($usuario);
 
@@ -94,12 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $data= ['email'=>$novo_email];
                 $conditions = ['id' => $id_usuario];
                 $linha_usuario = $usuario->AlterarUsuario($data, $conditions);      
-                if ($linha_usuario){
+                if ($linha_usuario['success']){
                     $dados['status'] = 'success';
                     $dados['message'] = 'Usuário alterado com sucesso.';
                 }else{
                     $dados['status'] = 'error';
-                    $dados['message'] = 'Falha na alteração.';
+                    $dados['message'] = $linha_usuario['msg'];
                 }
 
             } else if ($acao === 'alterar_senha'){
@@ -118,27 +121,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else if ($acao === 'clonar_repositorio') {
                 $nome_diretorio = $usuario->sanitize($_POST['repositorio']);
                 $resultado = $diretorios->clonarRepositorio($user, $id_usuario, $nome_diretorio);
-                if ($resultado['status']) {
+                if ($resultado['success']) {
                     $dados['status'] = 'success';
                     $dados['message'] = 'Repositório clonado com sucesso!';
                 } else {
                     $dados['status'] = 'error';
                     $dados['message'] = $resultado['msg'];
                 }
+            } else if ($acao === 'atualizar_repositorio') {
+                $id_diretorio = $usuario->sanitize($_POST['id_diretorio']);
+                if ($id_repositorio) {
+                    $resultado = $diretorios->atualizarRepositorio($user,$id_diretorio);
+                    if ($resultado['success']) {
+                        $dados['status'] = 'success';
+                        $dados['message'] = 'Repositório atualizado com sucesso!';
+                    } else {
+                        $dados['status'] = 'error';
+                        $dados['message'] = $resultado['msg'];
+                    }
+                } else {
+                    $dados['status'] = 'error';
+                    $dados['message'] = 'Repositório inexistente!';
+                }
             } else if ($acao === 'listar_repositorios') {
+                $host = "https://".$_SERVER['HTTP_HOST'];
                 $repositorios = $diretorios->listarRepositorios($id_usuario);
+                foreach ($repositorios as $i => $valor) {
+                    if ($valor['data_atualizado'] !== '0000-00-00 00:00:00') {
+                        $data_atualizado = new DateTime($valor['data_atualizado']);
+                        $data_atualizado = $data_atualizado->format('d/m/Y H:i:s');
+                    }
+                    unset($repositorios[$i]['existe']);
+                    $repositorios[$i]['url'] = $host.'/gh/'.$user.'/'.$valor['nome'];
+                    $repositorios[$i]['data_atualizado'] = $data_atualizado;
+                }
                 $dados['status'] = 'success';
                 $dados['repositorios'] = $repositorios;
             } else if ($acao === 'remover_repositorio') {
-                $id_repositorio = $_POST['id_repositorio'] ?? null;
+                $id_diretorio = $usuario->sanitize($_POST['id_diretorio']);
                 if ($id_repositorio) {
-                    $resultado = $diretorios->removerRepositorio($id_repositorio);
-                    if ($resultado) {
+                    $resultado = $diretorios->removerRepositorio($user,$id_repositorio);
+                    if ($resultado['success']) {
                         $dados['status'] = 'success';
                         $dados['message'] = 'Repositório removido com sucesso!';
                     } else {
                         $dados['status'] = 'error';
-                        $dados['message'] = 'Erro ao remover repositório.';
+                        $dados['message'] = $resultado['msg'];
                     }
                 } else {
                     $dados['status'] = 'error';

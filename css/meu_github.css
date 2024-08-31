@@ -36,3 +36,14 @@
 .button-clonar-repositorio:hover {
   background-color: #555;
 }
+.button-ver-diretorio {
+  background-color: #3141ff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-ver-diretorio:hover {
+  background-color: #555;
+}
