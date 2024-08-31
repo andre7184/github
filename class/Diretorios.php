@@ -54,7 +54,8 @@ class Diretorios {
             // Diretório não contém um repositório Git, clonar
             $command = "git clone $repoUrl " . escapeshellarg($repoDir);
         }
-    
+        echo "<pre>Comando: $command</pre>";
+        
         $result = $this->runCommand($command);
     
         if ($result === null || $result['return_code'] !== 0) {
