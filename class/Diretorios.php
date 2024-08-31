@@ -13,17 +13,22 @@ class Diretorios {
 
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
         $baseDir = '../../gh/';
-        $userDir = $baseDir . $user; 
-    
-        // Verifica se estamos no diretório correto
+        $userDir = $baseDir . $user;
+        
         if (!is_dir($baseDir)) {
-            return false;
+            return array(
+                'status' => false,
+                'msg' => 'Diretório base não encontrado.'
+            );
         }
     
         // Cria o diretório do usuário se não existir
         if (!file_exists($userDir)) {
             if (!mkdir($userDir, 0777, true)) {
-                return false;
+                return array(
+                    'status' => false,
+                    'msg' => 'Não foi possível criar o diretório do usuário.'
+                );
             }
         }
     
@@ -41,7 +46,10 @@ class Diretorios {
             ];
             return $this->crud->create('diretorio', $data);
         } catch (Exception $e) {
-            return false;
+            return array(
+                'status' => false,
+                'msg' => $e->getMessage()
+            );
         }
     }
 
