@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             } else if ($acao === 'atualizar_repositorio') {
                 $id_diretorio = $usuario->sanitize($_POST['id_diretorio']);
-                if ($id_repositorio) {
+                if ($id_diretorio) {
                     $resultado = $diretorios->atualizarRepositorio($user,$id_diretorio);
                     if ($resultado['success']) {
                         $dados['status'] = 'success';
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     $dados['status'] = 'error';
-                    $dados['message'] = 'Repositório inexistente!';
+                    $dados['message'] = 'Id do diretorio inexistente!';
                 }
             } else if ($acao === 'listar_repositorios') {
                 $host = "https://".$_SERVER['HTTP_HOST'];
@@ -159,8 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dados['repositorios'] = $repositorios;
             } else if ($acao === 'remover_repositorio') {
                 $id_diretorio = $usuario->sanitize($_POST['id_diretorio']);
-                if ($id_repositorio) {
-                    $resultado = $diretorios->removerRepositorio($user,$id_repositorio);
+                if ($id_diretorio) {
+                    $resultado = $diretorios->removerRepositorio($user,$id_diretorio);
                     if ($resultado['success']) {
                         $dados['status'] = 'success';
                         $dados['message'] = 'Repositório removido com sucesso!';
@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     $dados['status'] = 'error';
-                    $dados['message'] = 'ID do repositório não fornecido.';
+                    $dados['message'] = 'ID do diretorio não fornecido.';
                 }
             }else if ($acao === 'logout'){
                 $autenticacao->logout();
