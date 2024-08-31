@@ -12,7 +12,7 @@ class Diretorios {
     }
 
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
-        $baseDir = '../../gh/';
+        $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
         
         if (!is_dir($baseDir)) {
