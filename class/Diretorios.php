@@ -68,6 +68,10 @@ class Diretorios {
         // Obter data da última atualização remota
         $lastUpdate = $this->runCommand("cd " . escapeshellarg($repoDir) . " && git log -1 --format=%cd");
     
+        // Converter a data para o formato DATETIME do MySQL
+        $lastUpdateDate = new DateTime(trim($lastUpdate['output']));
+        $formattedLastUpdate = $lastUpdateDate->format('Y-m-d H:i:s');
+
         // Obter tipos de arquivos e suas quantidades
         $fileTypes = $this->runCommand("find " . escapeshellarg($repoDir) . " -type f | sed 's/.*\\.//' | sort | uniq -c");
     
@@ -89,7 +93,7 @@ class Diretorios {
             'linguagem' => trim($linguagem['output']),
             'qtd_arquivos' => trim($fileCount['output']),
             'qtd_pastas' => trim($dirCount['output']),
-            'data_atualizado_remoto' => trim($lastUpdate['output']),
+            'data_atualizado_remoto' => $formattedLastUpdate,
             'tipos_arquivos' => json_encode($fileTypesArray)
         ];
     
@@ -160,6 +164,10 @@ class Diretorios {
                 // Obter data da última atualização remota
                 $lastUpdate = $this->runCommand("cd " . escapeshellarg($repoDir) . " && git log -1 --format=%cd");
     
+                // Converter a data para o formato DATETIME do MySQL
+                $lastUpdateDate = new DateTime(trim($lastUpdate['output']));
+                $formattedLastUpdate = $lastUpdateDate->format('Y-m-d H:i:s');
+
                 // Obter tipos de arquivos e suas quantidades
                 $fileTypes = $this->runCommand("find " . escapeshellarg($repoDir) . " -type f | sed 's/.*\\.//' | sort | uniq -c");
     
@@ -180,7 +188,7 @@ class Diretorios {
                     'linguagem' => trim($linguagem['output']),
                     'qtd_arquivos' => trim($fileCount['output']),
                     'qtd_pastas' => trim($dirCount['output']),
-                    'data_atualizado_remoto' => trim($lastUpdate['output']),
+                    'data_atualizado_remoto' => $formattedLastUpdate,
                     'tipos_arquivos' => json_encode($fileTypesArray)
                 ];
     
