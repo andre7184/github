@@ -15,6 +15,8 @@ class Diretorios {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
         
+        echo $userDir;
+        exit;
         if (!is_dir($baseDir)) {
             return array(
                 'status' => false,
