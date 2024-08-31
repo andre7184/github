@@ -8,6 +8,28 @@ class Diretorios {
         $this->crud = new Crud();
     }
 
+    private function runCommand($command) {
+        $descriptorspec = array(
+            0 => array("pipe", "r"),  // stdin
+            1 => array("pipe", "w"),  // stdout
+            2 => array("pipe", "w")   // stderr
+        );
+
+        $process = proc_open($command, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $output = stream_get_contents($pipes[1]);
+            $errorOutput = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            $returnCode = proc_close($process);
+
+            return array('output' => $output, 'error' => $errorOutput, 'return_code' => $returnCode);
+        }
+
+        return null;
+    }
+
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
@@ -30,19 +52,16 @@ class Diretorios {
         }
 
         $repoUrl = "https://github.com/$user/$repositorio.git";
-
-        // Clona o repositório usando shell_exec
         $command = "git clone $repoUrl " . escapeshellarg($userDir);
-        $output = shell_exec($command);
+        $result = $this->runCommand($command);
 
-        if ($output === null) {
+        if ($result === null || $result['return_code'] !== 0) {
             return array(
                 'status' => false,
-                'msg' => 'Erro ao clonar o repositório.'
+                'msg' => 'Erro ao clonar o repositório: ' . $result['error']
             );
         }
 
-        // Salva no banco de dados
         $data = [
             'nome' => $repositorio,
             'id_usuario' => $id_usuario,
@@ -90,10 +109,10 @@ class Diretorios {
 
         if (is_dir($repoDir)) {
             $command = "cd " . escapeshellarg($repoDir) . " && git pull";
-            $output = shell_exec($command);
+            $result = $this->runCommand($command);
 
-            if ($output === null) {
-                return ['status' => 'error', 'message' => 'Erro ao atualizar repositório.'];
+            if ($result === null || $result['return_code'] !== 0) {
+                return ['status' => 'error', 'message' => 'Erro ao atualizar repositório: ' . $result['error']];
             }
 
             return ['status' => 'success', 'message' => 'Repositório atualizado com sucesso.'];
