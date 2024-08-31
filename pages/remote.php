@@ -9,12 +9,25 @@ $autenticacao = new Autenticacao($usuario);
 $dados = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $usuario->sanitize($_POST['acao']);
-    if ($acao === 'recuperar_senha') {
+    if ($acao === 'fazer_login'){
+        $email = $usuario->sanitize($_POST['email']);
+        $senha = $usuario->sanitize($_POST['senha']);
+    
+        // Tentando fazer login
+        $login = $autenticacao->login($email, $senha);
+        if ($login) {
+            $dados['success'] = true;
+            $dados['message'] = 'Login bem-sucedido!';
+        }else{
+            $dados['success'] = false;
+            $dados['message'] = 'Falha no login. Verifique seu email e senha.';
+        }
+    } else if ($acao === 'recuperar_senha') {
         $email = $usuario->sanitize($_POST['email']);
         // Chama o método de recuperação de senha
         $novaSenha = $usuario->recuperarSenha($email);
         if ($novaSenha) {
-            $nomeCliente = $usuario->getNome($email);
+            $nomeUser = $usuario->getUser($email);
             $url_login = "http://localhost/mercado_online/index.html?pg=login.html"; 
             $assunto = "Recuperação de Senha";
             $corpoEmail = "Olá $nomeCliente,<br><br>Recebemos uma solicitação para redefinir sua senha.<br><br>Sua nova senha é: <b>$novaSenha</b><br><a href='$url_login'>$url_login</a><br>Acesse para entrar com sua nova senha.<br><br><br>Se você não solicitou uma redefinição de senha, por favor, ignore este e-mail.<br><br>Atenciosamente,<br><b>Equipe $empresa</b>";
@@ -61,29 +74,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else { 
         if ($autenticacao->estaLogado()){
+            $arrayDados = $autenticacao->getSession();
+            $user = $arrayDados['user'];
+            $id_usuario = $arrayDados['id'];
+            $email = $arrayDados['email'];
+
+            require_once '../class/Diretorios.php';
+            $diretorios = new Diretorios();
+
             if ($acao === 'dados_do_usuario') {
-                // Busca os dados do usuário
-                if (isset($_POST['id'])){
-                    $conditions = ['id' => $usuario->sanitize($_POST['id'])];
-                } else {
-                    $conditions = ['id' => $_SESSION['id']];
-                }
+                $conditions = ['id' => $id_usuario];
                 $linha_usuario = $usuario->listarUsuario($conditions)[0];
                 unset($linha_usuario['senha']);
-                if ($linha_usuario['admin'] == 1) {
-                    $linha_usuario['admin'] = 'Admin';
-                    $linha_usuario['qtd_historico'] = $usuario->qtdTransacoes();  
-                } else {
-                    $linha_usuario['admin'] = 'Normal';
-                    $linha_usuario['qtd_historico'] = $usuario->qtdTransacoes(['id_usuario' => $_SESSION['id']]);  
-                }
-                $dados=$linha_usuario;
+                $dados['user']=$linha_usuario;
+                $dados['diretorios'] = $diretorios->listarRepositorios($id_usuario);
+
             } else if ($acao === 'alterar_usuario'){
-                $nome = $usuario->sanitize($_POST['nome']);
-                $email = $usuario->sanitize($_POST['email']);
-                $id = $usuario->sanitize($_POST['id']);
-                $data= ['nome'=>$nome,'email'=>$email];
-                $conditions = ['id' => $id];
+                $novo_email = $usuario->sanitize($_POST['email']);
+                $data= ['email'=>$novo_email];
+                $conditions = ['id' => $id_usuario];
                 $linha_usuario = $usuario->AlterarUsuario($data, $conditions);      
                 if ($linha_usuario){
                     $dados['status'] = 'success';
@@ -94,11 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
             } else if ($acao === 'alterar_senha'){
-                $senha = $usuario->sanitize($_POST['senha']);
-                $id = $usuario->sanitize($_POST['id']); 
-                $senha = password_hash($senha, PASSWORD_DEFAULT); 
+                $nova_senha = $usuario->sanitize($_POST['senha']);
+                $senha = password_hash($nova_senha, PASSWORD_DEFAULT); 
                 $data = ['senha'=>$senha];
-                $conditions = ['id' => $id];
+                $conditions = ['id' => $id_usuario];
                 $usuario = $usuario->AlterarUsuario($data, $conditions);      
                 if ($usuario){
                     $dados['status'] = 'success';
@@ -107,8 +115,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $dados['status'] = 'error';
                     $dados['message'] = 'Falha na alteração.';
                 }
-
-
+            } else if ($acao === 'clonar_repositorio') {
+                $nome_diretorio = $usuario->sanitize($_POST['repositorio']);
+                $resultado = $diretorios->clonarRepositorio($user, $id_usuario, $nome_diretorio);
+                if ($resultado) {
+                    $dados['status'] = 'success';
+                    $dados['message'] = 'Repositório clonado com sucesso!';
+                } else {
+                    $dados['status'] = 'error';
+                    $dados['message'] = 'Erro ao clonar repositório.';
+                }
+            } else if ($acao === 'listar_repositorios') {
+                $repositorios = $diretorios->listarRepositorios($id_usuario);
+                $dados['status'] = 'success';
+                $dados['repositorios'] = $repositorios;
+            } else if ($acao === 'remover_repositorio') {
+                $id_repositorio = $_POST['id_repositorio'] ?? null;
+                if ($id_repositorio) {
+                    $resultado = $diretorios->removerRepositorio($id_repositorio);
+                    if ($resultado) {
+                        $dados['status'] = 'success';
+                        $dados['message'] = 'Repositório removido com sucesso!';
+                    } else {
+                        $dados['status'] = 'error';
+                        $dados['message'] = 'Erro ao remover repositório.';
+                    }
+                } else {
+                    $dados['status'] = 'error';
+                    $dados['message'] = 'ID do repositório não fornecido.';
+                }
             }else if ($acao === 'logout'){
                 $autenticacao->logout();
                 $dados['status'] = 'logged_out';

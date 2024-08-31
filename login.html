@@ -4,23 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="./css/cadastro.css" />
+    <link rel="stylesheet" href="./css/cadastro_login.css" />
   </head>
   <body>
     <div class="container">
       <h1>Login</h1>
       <form id="loginForm">
         <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Nome de Usuário"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="E-mail do Usuário"
           required
         />
         <input
           type="password"
-          id="password"
-          name="password"
+          id="senha"
+          name="senha"
           placeholder="Senha"
           required
         />
@@ -28,10 +28,11 @@
       </form>
       <div class="info">
         <p>
-          <strong>Nota:</strong> Insira seu nome de usuário e senha para acessar
-          sua conta.
+          <strong>Nota:</strong> Insira seu E-mail e senha para acessar sua
+          conta ou para cadastrar click <a href="cadastro.html">aqui</a>
         </p>
       </div>
+      <span id="loginFeedback" class="error"></span>
     </div>
 
     <script src="./js/AjaxRequest.js"></script>

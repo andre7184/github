@@ -1,5 +1,6 @@
 <?php
-include '../../../private/config_gh.php';
+// include '../../../private/config_gh.php';
+include 'config_gh.php';
 class Database {
     private $host;
     private $db_name;

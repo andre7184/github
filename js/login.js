@@ -3,25 +3,24 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
 
     const data = {
-      username: username,
-      password: password,
-      acao: "login",
+      email: email,
+      senha: senha,
+      acao: "fazer_login",
     };
-
-    const ajax = new AjaxRequest("usuario.php");
+    const feedback = document.getElementById("loginFeedback");
+    const ajax = new AjaxRequest("pages/remote.php");
     ajax
       .send(data)
       .then((data) => {
         if (data.success) {
-          alert("Login realizado com sucesso!");
-          // Redirecionar para a página do usuário
-          window.location.href = "home.html";
+          window.location.replace("home.html");
         } else {
-          alert("Nome de usuário ou senha incorretos.");
+          feedback.textContent = data.message;
+          feedback.className = "error";
         }
       })
       .catch((error) => {

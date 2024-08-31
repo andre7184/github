@@ -12,15 +12,15 @@ class Autenticacao {
         if ($userId) {
             $_SESSION['id'] = $userId;
             $_SESSION['email'] = $email;
-            $_SESSION['admin'] = $this->usuario->Admin($email);
+            $_SESSION['user'] = $this->usuario->getUser($email);
             return true;
         } else {
             return false;
         }
     }
     
-    public function eAdmin(){
-        return isset($_SESSION['admin']) && $_SESSION['admin'];
+    public function getUser(){
+        return isset($_SESSION['user']) && $_SESSION['user'];
     }
 
     public function logout(){
@@ -37,7 +37,7 @@ class Autenticacao {
             return array(
                 'id' => $_SESSION['id'],
                 'email' => $_SESSION['email'],
-                'admin' => $_SESSION['admin']
+                'user' => $_SESSION['user']
             );
         } else {
             return null;

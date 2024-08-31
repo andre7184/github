@@ -1,0 +1,38 @@
+#repo-list li {
+  margin: 10px 0;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+}
+
+.repo-info {
+  flex: 1;
+  width: 50%;
+}
+.repo-action {
+  margin-left: 20px;
+  width: 50%;
+}
+#avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+#username {
+  font-size: 30px;
+  font-weight: bold;
+  color: #0000ff;
+}
+.button-clonar-repositorio {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-clonar-repositorio:hover {
+  background-color: #555;
+}

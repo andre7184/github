@@ -65,7 +65,7 @@ class Usuario {
         return false;
     }
 
-    public function getNome($email){
+    public function getUser($email){
         $usuarios = $this->crud->read('usuario', ['email' => $email]);
         if (count($usuarios) > 0) {
             return $usuarios[0]['user'];

@@ -7,32 +7,7 @@
     <link rel="stylesheet" href="./css/home.css" />
   </head>
   <body>
-    <header>
-      <div class="menu-toggle">
-        <input type="checkbox" id="menu-check" />
-        <div class="menu-btn">
-          <label for="menu-check">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-        </div>
-        <nav class="menu">
-          <a href="#">Meu GitHub</a>
-          <a href="#">Repositórios Clonados</a>
-          <a href="#">Clonar Repositório</a>
-          <a href="#">Meus Dados</a>
-          <a href="#">Logout</a>
-        </nav>
-      </div>
-      <nav class="desktop-menu">
-        <a href="#">Meu GitHub</a>
-        <a href="#">Repositórios Clonados</a>
-        <a href="#">Clonar Repositório</a>
-        <a href="#">Meus Dados</a>
-        <a href="#">Logout</a>
-      </nav>
-    </header>
+    <div id="header-placeholder"></div>
     <main>
       <h1>Bem-vindo ao Meu Serviço</h1>
       <p>
@@ -63,7 +38,15 @@
         acessar o conteúdo através de uma URL personalizada.
       </p>
     </main>
+    <script>
+      fetch("pages/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-placeholder").innerHTML = data;
+        });
+    </script>
     <script src="./js/AjaxRequest.js"></script>
+    <script src="./js/auth.js"></script>
     <script src="./js/home.js"></script>
   </body>
 </html>
