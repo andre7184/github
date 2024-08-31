@@ -1,8 +1,5 @@
 <?php
 require_once 'Crud.php';
-require_once '../../vendor/autoload.php'; // Certifique-se de que o autoload do Composer está incluído
-
-use CzProject\GitPhp\Git;
 
 class Diretorios {
     private $crud;
@@ -14,16 +11,14 @@ class Diretorios {
     public function clonarRepositorio($user, $id_usuario, $repositorio) {
         $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $user;
-        
-        echo $userDir;
-        exit;
+
         if (!is_dir($baseDir)) {
             return array(
                 'status' => false,
                 'msg' => 'Diretório base não encontrado.'
             );
         }
-    
+
         // Cria o diretório do usuário se não existir
         if (!file_exists($userDir)) {
             if (!mkdir($userDir, 0777, true)) {
@@ -33,26 +28,27 @@ class Diretorios {
                 );
             }
         }
-    
+
         $repoUrl = "https://github.com/$user/$repositorio.git";
-    
-        // Clona o repositório usando czproject/git-php
-        try {
-            $git = new Git();
-            $git->cloneRepository($repoUrl, $userDir);
-            // Salva no banco de dados
-            $data = [
-                'nome' => $repositorio,
-                'id_usuario' => $id_usuario,
-                'data_atualizado' => date('Y-m-d H:i:s')
-            ];
-            return $this->crud->create('diretorio', $data);
-        } catch (Exception $e) {
+
+        // Clona o repositório usando shell_exec
+        $command = "git clone $repoUrl " . escapeshellarg($userDir);
+        $output = shell_exec($command);
+
+        if ($output === null) {
             return array(
                 'status' => false,
-                'msg' => $e->getMessage()
+                'msg' => 'Erro ao clonar o repositório.'
             );
         }
+
+        // Salva no banco de dados
+        $data = [
+            'nome' => $repositorio,
+            'id_usuario' => $id_usuario,
+            'data_atualizado' => date('Y-m-d H:i:s')
+        ];
+        return $this->crud->create('diretorio', $data);
     }
 
     public function listarRepositorios($id_usuario) {
@@ -62,7 +58,7 @@ class Diretorios {
     }
 
     public function verificarRepositorios($id_usuario, &$repositorios) {
-        $baseDir = '../../gh/';
+        $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
         $userDir = $baseDir . $id_usuario;
 
         foreach ($repositorios as &$repositorio) {
@@ -76,7 +72,7 @@ class Diretorios {
         if ($repositorio) {
             $user = $repositorio[0]['id_usuario'];
             $nome = $repositorio[0]['nome'];
-            $repoDir = "../../gh/$user/$nome";
+            $repoDir = realpath(__DIR__ . '/../../gh/') . "/".$user.'/'.$nome;
 
             // Remove o diretório do repositório
             $this->deleteDirectory($repoDir);
@@ -89,18 +85,18 @@ class Diretorios {
     }
 
     public function atualizarRepositorio($user, $repositorio) {
-        $baseDir = '../../gh/';
-        $repoDir = "$baseDir/$user/$repositorio";
+        $baseDir = realpath(__DIR__ . '/../../gh/') . '/';
+        $repoDir = $baseDir . $user .'/'. $repositorio;
 
         if (is_dir($repoDir)) {
-            try {
-                $git = new Git();
-                $repo = $git->open($repoDir);
-                $repo->pull();
-                return ['status' => 'success', 'message' => 'Repositório atualizado com sucesso.'];
-            } catch (Exception $e) {
+            $command = "cd " . escapeshellarg($repoDir) . " && git pull";
+            $output = shell_exec($command);
+
+            if ($output === null) {
                 return ['status' => 'error', 'message' => 'Erro ao atualizar repositório.'];
             }
+
+            return ['status' => 'success', 'message' => 'Repositório atualizado com sucesso.'];
         } else {
             return ['status' => 'error', 'message' => 'Repositório não encontrado.'];
         }
