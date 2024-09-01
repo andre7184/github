@@ -8,7 +8,7 @@ body {
 header {
   background-color: #333;
   color: #fff;
-  padding: 10px 20px;
+  padding: 5px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,6 +19,20 @@ header {
   align-items: center;
   justify-content: flex-end; /* Alinha o conteúdo à direita */
   width: 100%;
+}
+
+.menu-toggle img {
+  width: 50px;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.menu-toggle span {
+  text-align: center;
+  margin-right: auto;
+  font-size: 23px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
 }
 
 .menu-btn {
@@ -68,17 +82,19 @@ header {
 
 .menu {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 .menu a {
   color: #fff;
   text-decoration: none;
   font-size: 18px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .menu a:hover {
-  color: #ffff00;
+  color: #008000;
 }
 
 @media (max-width: 768px) {
@@ -87,9 +103,9 @@ header {
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
-    padding: 5px;
+    padding: 10px;
     position: absolute;
-    top: 40px; /* Ajuste a posição do menu */
+    top: 50px; /* Ajuste a posição do menu */
     right: 0;
     width: 100%;
     background-color: #333;
@@ -121,7 +137,8 @@ main {
   padding: 20px;
 }
 
-h1 {
+h1,
+h2 {
   color: #333;
 }
 

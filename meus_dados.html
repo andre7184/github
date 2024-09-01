@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Dados</title>
+    <link rel="stylesheet" href="./css/home.css" />
+    <link rel="stylesheet" href="./css/meus_dados.css" />
+    <link rel="stylesheet" href="./css/popup.css" />
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Meus Dados</h1>
+      <div id="user-info">
+        <p><strong>Usuário:</strong> <span id="username"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+      </div>
+      <button class="button-alterar" onclick="showAlterarSenhaPopup()">
+        Alterar Senha
+      </button>
+      <button class="button-alterar" onclick="showAlterarEmailPopup()">
+        Alterar Email
+      </button>
+      <button class="button-remover" onclick="removerConta()">
+        Remover Conta
+      </button>
+    </main>
+    <script src="./js/AjaxRequest.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/meus_dados.js"></script>
+  </body>
+</html>
