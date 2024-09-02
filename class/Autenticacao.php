@@ -72,7 +72,7 @@ class Autenticacao {
             $this->usuario->cadastraUsuarioGitHub($user, $email, $githubId, $nome, $avatarUrl);
         } else {
             // Atualiza os dados do usuário com os dados do GitHub
-            $this->usuario->atualizarUsuarioGitHub($user, $email, $nome, $avatarUrl);
+            $this->usuario->atualizarUsuarioGitHub($user, $email, $githubId, $nome, $avatarUrl);
         }
 
         // Obtém o ID do usuário
