@@ -66,6 +66,7 @@ class Autenticacao {
         $nome = $githubUser['name'];
         $avatarUrl = $githubUser['avatar_url'];
 
+        echo 'loginWithGithub: ' . $user . ' ' . $email . ' ' . $githubId . ' ' . $nome . ' ' . $avatarUrl;
         // Verifica se o usuário já está cadastrado pelo nome de usuário
         if (!$this->usuario->userCadastrado($user)) {
             // Cadastra o usuário com os dados do GitHub
