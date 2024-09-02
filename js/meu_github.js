@@ -42,17 +42,35 @@ function carregarRepositorios(dados) {
         const listItem = document.createElement("li");
         const diretorio = dados_diretorios.find((d) => d.nome === repo.name);
 
+        // Verificar se a linguagem do repositório é uma linguagem web
+        const webLanguages = [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "PHP",
+          "Ruby",
+          "Python",
+          "TypeScript",
+        ];
+        const isWebRepo = webLanguages.includes(repo.language);
+        const linguagem = repo.language.toLowerCase();
+        const iconeLinguagem = `imgs/${linguagem}.png`;
+
         listItem.innerHTML = `
           <div class="repo-info">
             <strong>${repo.name}</strong><br>
-            Linguagem: ${repo.language}<br>
+            Linguagem: <img src="${iconeLinguagem}" alt="${
+          repo.language
+        }" style="width: 20px; height: 20px;">${repo.language}<br>
             <a href="${repo.html_url}" target="_blank">Ver no GitHub</a>
           </div>
           <div class="repo-action">
             ${
               diretorio
                 ? `<button class="button-ver-diretorio" onclick="abrirDiretorio(${diretorio.id})">Ver Diretório</button>`
-                : `<button class="button-clonar-repositorio" onclick="clonarRepositorio('${repo.name}')">Clonar Repositório</button>`
+                : isWebRepo
+                ? `<button class="button-clonar-repositorio" onclick="clonarRepositorio('${repo.name}')">Clonar Repositório</button>`
+                : ""
             }
           </div>
         `;
