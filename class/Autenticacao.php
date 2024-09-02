@@ -77,7 +77,7 @@ class Autenticacao {
         }
 
         // Obtém o ID do usuário
-        $userId = $this->usuario->verificaLogin($user, $githubId);
+        $userId = $this->usuario->verificaLogin($email, $githubId);
 
         // Inicia a sessão do usuário
         if ($userId) {
