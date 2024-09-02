@@ -53,6 +53,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'
 
     $githubUser = json_decode($userResponse, true);
 
+    // Verificar se o email está vazio
+    if (empty($githubUser['email'])) {
+        // Fazer uma solicitação adicional para obter os emails do usuário
+        $emailsUrl = 'https://api.github.com/user/emails';
+        $ch = curl_init($emailsUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $accessToken, 'User-Agent: YourAppName']);
+        $emailsResponse = curl_exec($ch);
+        curl_close($ch);
+
+        $emails = json_decode($emailsResponse, true);
+        // Procurar pelo email principal
+        foreach ($emails as $email) {
+            if ($email['primary'] && $email['verified']) {
+                $githubUser['email'] = $email['email'];
+                break;
+            }
+        }
+    }
+
     // Autenticar o usuário
     $retorno = $autenticacao->loginWithGithub($githubUser);
 
