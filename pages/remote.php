@@ -64,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'
         curl_close($ch);
 
         $emails = json_decode($emailsResponse, true);
-        print_r($emails);
         // Verificar se $emails é um array
         if (is_array($emails)) {
             // Procurar pelo email principal
@@ -77,14 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'
             }
         }
     }
-    print_r($githubUser);
 
     // Autenticar o usuário
     $retorno = $autenticacao->loginWithGithub($githubUser);
 
     if ($retorno) {
         // Redirecionar para a página home.html após o login bem-sucedido
-        header('Location: home.html');
+        header('Location: ../home.html');
         exit();
     }else{
         ?>
@@ -114,22 +112,30 @@ $dados = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $usuario->sanitize($_POST['acao']);
     if ($acao === 'salvar_stategithub') {
-        $state = $usuario->sanitize($_POST['state']);
-        $_SESSION['oauth2state'] = $state;
-        $dados['success'] = true;
-        $dados['message'] = 'State salvo com sucesso!';
-    }else if ($acao === 'fazer_login'){
-        $email = $usuario->sanitize($_POST['email']);
-        $senha = $usuario->sanitize($_POST['senha']);
-    
-        // Tentando fazer login
-        $login = $autenticacao->login($email, $senha);
-        if ($login) {
-            $dados['success'] = true;
-            $dados['message'] = 'Login bem-sucedido!';
+        if ($autenticacao->estaLogado()){
+            $dados['authenticado'] = true;
         }else{
-            $dados['success'] = false;
-            $dados['message'] = 'Falha no login. Verifique seu email e senha.';
+            $state = $usuario->sanitize($_POST['state']);
+            $_SESSION['oauth2state'] = $state;
+            $dados['success'] = true;
+            $dados['message'] = 'State salvo com sucesso!';
+        }
+    }else if ($acao === 'fazer_login'){
+        if ($autenticacao->estaLogado()){
+            $dados['authenticado'] = true;
+        }else{
+            $email = $usuario->sanitize($_POST['email']);
+            $senha = $usuario->sanitize($_POST['senha']);
+        
+            // Tentando fazer login
+            $login = $autenticacao->login($email, $senha);
+            if ($login) {
+                $dados['success'] = true;
+                $dados['message'] = 'Login bem-sucedido!';
+            }else{
+                $dados['success'] = false;
+                $dados['message'] = 'Falha no login. Verifique seu email e senha.';
+            }
         }
     } else if ($acao === 'recuperar_senha') {
         $email = $usuario->sanitize($_POST['email']);
@@ -155,20 +161,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dados['message'] = 'E-mail não cadastrado.';
         }
     } else if ($acao === 'cadastrar_usuario') {
-        $user = $usuario->sanitize($_POST['user']);
-        $email = $usuario->sanitize($_POST['email']);
-        $senha = $usuario->sanitize($_POST['senha']);
-        if ($usuario->emailCadastrado($email)) {
-            $dados['status'] = 'error';
-            $dados['message'] = 'Email já está registrado.';
-        } else {
-            // Registre o novo usuário
-            if ($usuario->cadastraUsuario($user, $email, $senha)) {
-                $dados['status'] = 'success';
-                $dados['message'] = 'Registro bem-sucedido.';
-            } else {
+        if ($autenticacao->estaLogado()){
+            $dados['authenticado'] = true;
+        }else{
+            $user = $usuario->sanitize($_POST['user']);
+            $email = $usuario->sanitize($_POST['email']);
+            $senha = $usuario->sanitize($_POST['senha']);
+            if ($usuario->emailCadastrado($email)) {
                 $dados['status'] = 'error';
-                $dados['message'] = 'Falha no registro.';
+                $dados['message'] = 'Email já está registrado.';
+            } else {
+                // Registre o novo usuário
+                if ($usuario->cadastraUsuario($user, $email, $senha)) {
+                    $dados['status'] = 'success';
+                    $dados['message'] = 'Registro bem-sucedido.';
+                } else {
+                    $dados['status'] = 'error';
+                    $dados['message'] = 'Falha no registro.';
+                }
             }
         }
     } else if ($acao === 'verifica_user') {

@@ -12,7 +12,9 @@ document.getElementById("login-github").addEventListener("click", function () {
   ajaxRequest
     .send(data)
     .then((data) => {
-      if (data.success) {
+      if (data.authenticado) {
+        window.location.replace("home.html");
+      } else if (data.success) {
         const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=user:email`;
         window.location.href = authUrl;
       } else {

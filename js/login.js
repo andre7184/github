@@ -16,7 +16,7 @@ document
     ajax
       .send(data)
       .then((data) => {
-        if (data.success) {
+        if (data.authenticado || data.success) {
           window.location.replace("home.html");
         } else {
           feedback.textContent = data.message;

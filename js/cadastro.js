@@ -18,7 +18,9 @@ document
     ajax
       .send(data)
       .then((data) => {
-        if (data.status) {
+        if (data.authenticado) {
+          window.location.href = "home.html";
+        } else if (data.status) {
           if (data.status == "success") {
             window.location.replace("login.html");
           }
