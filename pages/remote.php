@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'
 
     $clientId = 'Ov23litmC5N7kJpBy26i'; // Substitua pelo seu Client ID do GitHub
     $clientSecret = 'a3df6db1ddac45dd8b92db8d331584d1efc52880'; // Substitua pelo seu Client Secret do GitHub
-    $redirectUri = 'https://vps52814.publiccloud.com.br/remote.php?acao=authgithub';
+    $redirectUri = 'https://vps52814.publiccloud.com.br/github/pages/remote.php?acao=authgithub';
 
     // Trocar o código de autorização por um token de acesso
     $tokenUrl = 'https://github.com/login/oauth/access_token';

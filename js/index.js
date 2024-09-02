@@ -1,7 +1,7 @@
 document.getElementById("login-github").addEventListener("click", function () {
   const clientId = "Ov23litmC5N7kJpBy26i"; // Substitua pelo seu Client ID do GitHub
   const redirectUri =
-    "https://vps52814.publiccloud.com.br/remote.php?acao=authgithub"; // Substitua pela URL de redirecionamento do seu site
+    "https://vps52814.publiccloud.com.br/github/pages/remote.php?acao=authgithub"; // Substitua pela URL de redirecionamento do seu site
   const state = Math.random().toString(36).substring(7); // Gera um estado aleatório para segurança
   const data = {
     state: state,
