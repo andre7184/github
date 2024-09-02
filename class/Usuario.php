@@ -38,6 +38,27 @@ class Usuario {
         ]);
     }
 
+    public function cadastraUsuarioGitHub($user, $email, $githubId, $nome, $avatarUrl){
+        $githubIdHashed = password_hash($githubId, PASSWORD_DEFAULT); // Hash do GitHub ID
+        return $this->crud->create('usuario', [
+            'user' => $user,
+            'email' => $email,
+            'senha' => $githubIdHashed, // Usando o hash do GitHub ID como senha
+            'nome' => $nome,
+            'avatar_url' => $avatarUrl
+        ]);
+    }
+
+    public function atualizarUsuarioGitHub($user, $email, $githubId, $nome, $avatarUrl){
+        $githubIdHashed = password_hash($githubId, PASSWORD_DEFAULT);
+        return $this->crud->update('usuario', [
+            'email' => $email,
+            'senha' => $githubIdHashed,
+            'nome' => $nome,
+            'avatar_url' => $avatarUrl
+        ], ['user' => $user]);
+    }
+
     public function AlterarUsuario($data,$filtros) {
         return $this->crud->update('usuario', $data, $filtros);
     }
@@ -81,4 +102,6 @@ class Usuario {
         return $this->crud->sanitize($data);
     }
 }
+
+
 ?>

@@ -9,10 +9,90 @@ setlocale(LC_TIME, 'pt_BR.UTF-8');
 $usuario = new Usuario();
 $autenticacao = new Autenticacao($usuario);
 
+// Verifica se a solicitação é GET e se a ação é authgithub
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'authgithub') {
+    $code = $_GET['code'];
+    $state = $_GET['state'];
+    $storedState = $_SESSION['oauth2state'];
+
+    if ($state !== $storedState) {
+        die('Estado inválido');
+    }
+
+    $clientId = 'Ov23litmC5N7kJpBy26i'; // Substitua pelo seu Client ID do GitHub
+    $clientSecret = 'a3df6db1ddac45dd8b92db8d331584d1efc52880'; // Substitua pelo seu Client Secret do GitHub
+    $redirectUri = 'https://vps52814.publiccloud.com.br/remote.php?acao=authgithub';
+
+    // Trocar o código de autorização por um token de acesso
+    $tokenUrl = 'https://github.com/login/oauth/access_token';
+    $postData = [
+        'client_id' => $clientId,
+        'client_secret' => $clientSecret,
+        'code' => $code,
+        'redirect_uri' => $redirectUri,
+    ];
+
+    $ch = curl_init($tokenUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($response, true);
+    $accessToken = $data['access_token'];
+
+    // Obter informações do usuário
+    $userUrl = 'https://api.github.com/user';
+    $ch = curl_init($userUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $accessToken, 'User-Agent: YourAppName']);
+    $userResponse = curl_exec($ch);
+    curl_close($ch);
+
+    $githubUser = json_decode($userResponse, true);
+
+    // Autenticar o usuário
+    $retorno = $autenticacao->loginWithGithub($githubUser);
+
+    if ($retorno) {
+        // Redirecionar para a página home.html após o login bem-sucedido
+        header('Location: home.html');
+        exit();
+    }else{
+        ?>
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <title>Redirecionamento</title>
+            <script>
+                // Função para redirecionar após o tempo de espera
+                function redirecionar() {
+                    setTimeout(function() {
+                        window.location.href = "index.html";
+                    }, 5000); // Converte segundos para milissegundos
+                }
+            </script>
+        </head>
+        <body onload="redirecionar()">
+            <p><?php echo 'Falha no login do Github. Redirecionando ...'; ?></p>
+        </body>
+        </html>
+    <?php
+    }
+    exit();
+}
 $dados = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $usuario->sanitize($_POST['acao']);
-    if ($acao === 'fazer_login'){
+    if ($acao === 'salvar_stategithub') {
+        $state = $usuario->sanitize($_POST['state']);
+        $_SESSION['oauth2state'] = $state;
+        $dados['success'] = true;
+        $dados['message'] = 'State salvo com sucesso!';
+    }else if ($acao === 'fazer_login'){
         $email = $usuario->sanitize($_POST['email']);
         $senha = $usuario->sanitize($_POST['senha']);
     

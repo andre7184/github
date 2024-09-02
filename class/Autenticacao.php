@@ -4,7 +4,10 @@ class Autenticacao {
 
     public function __construct($usuario = null){
         $this->usuario = $usuario;
-        session_start();
+        session_name('git_home'); // Defina um nome único para a sessão
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function login($email, $senha){
@@ -24,8 +27,20 @@ class Autenticacao {
     }
 
     public function logout(){
+        // Limpar todas as variáveis de sessão
         session_unset();
+            
+        // Destruir a sessão
         session_destroy();
+
+        // Opcional: Limpar cookies de sessão
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
     }
 
     public function estaLogado(){
@@ -43,5 +58,36 @@ class Autenticacao {
             return null;
         }
     }
+
+    public function loginWithGithub($githubUser) {
+        $email = $githubUser['email'];
+        $user = $githubUser['login'];
+        $githubId = $githubUser['id']; // ID único do GitHub
+        $nome = $githubUser['name'];
+        $avatarUrl = $githubUser['avatar_url'];
+
+        // Verifica se o usuário já está cadastrado pelo nome de usuário
+        if (!$this->usuario->userCadastrado($user)) {
+            // Cadastra o usuário com os dados do GitHub
+            $this->usuario->cadastraUsuarioGitHub($user, $email, $githubId, $nome, $avatarUrl);
+        } else {
+            // Atualiza os dados do usuário com os dados do GitHub
+            $this->usuario->atualizarUsuarioGitHub($user, $email, $nome, $avatarUrl);
+        }
+
+        // Obtém o ID do usuário
+        $userId = $this->usuario->verificaLogin($user, $githubId);
+
+        // Inicia a sessão do usuário
+        if ($userId) {
+            $_SESSION['id'] = $userId;
+            $_SESSION['email'] = $email;
+            $_SESSION['user'] = $user;
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
+
 ?>
