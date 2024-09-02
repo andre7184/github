@@ -13,7 +13,7 @@ document.getElementById("login-github").addEventListener("click", function () {
     .send(data)
     .then((data) => {
       if (data.success) {
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=user:email`;
         window.location.href = authUrl;
       } else {
         feedback.textContent = "Não foi possível realizar o login por GitHub";
