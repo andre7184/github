@@ -5,7 +5,7 @@ function verificarAutenticacao() {
     .then((data) => {
       if (data.naoautenticado) {
         // retornar para a pagina de
-        window.location.href = "login.html";
+        window.location.href = "index.html";
       } else {
         callBackAutenticacao(data);
       }
@@ -17,7 +17,7 @@ function logout() {
   ajaxRequest
     .send({ acao: "logout" })
     .then((data) => {
-      window.location.href("login.html");
+      window.location.href("index.html");
     })
     .catch((error) => console.error("Erro:", error));
 }

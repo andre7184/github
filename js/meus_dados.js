@@ -104,7 +104,7 @@ function removerConta() {
       .send({ acao: "remover_conta" })
       .then((response) => {
         alert("Conta removida com sucesso.");
-        window.location.href = "login.html";
+        window.location.href = "index.html";
       })
       .catch((error) => {
         console.error("Erro ao remover conta:", error);
