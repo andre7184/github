@@ -17,7 +17,7 @@ function logout() {
   ajaxRequest
     .send({ acao: "logout" })
     .then((data) => {
-      window.location.href("index.html");
+      window.location.href = "index.html";
     })
     .catch((error) => console.error("Erro:", error));
 }
