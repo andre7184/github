@@ -37,7 +37,7 @@ function carregarRepositorios(dados) {
     .then((repos) => {
       const repoList = document.getElementById("repo-list");
       repoList.innerHTML = ""; // Limpa a lista antes de adicionar novos itens
-
+      console.log(repos);
       repos.forEach((repo) => {
         const listItem = document.createElement("li");
         const diretorio = dados_diretorios.find((d) => d.nome === repo.name);
